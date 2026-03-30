@@ -1,0 +1,144 @@
+<div class="toast-notification" [class.show]="showToastMsg">{{ toastMessage }}</div>
+<div class="bg-scene">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="dashboard-layout">
+  <app-navbar></app-navbar>
+
+  <div class="main-wrapper">
+    <app-header></app-header>
+    
+    <div class="content-area">
+      <div class="dashboard-header flex-between mb-4">
+        <div>
+          <h1 class="hero-title">Work & Tasks</h1>
+          <p class="hero-sub mt-2">Log focused work sessions and manage pending tasks.</p>
+        </div>
+      </div>
+
+      <!-- Weekly KPI Summary -->
+      <div class="stats-row mb-5">
+        <div class="stat-chip bg-glass">
+          <span class="stat-num">{{(summary?.focused_hours | number:'1.1-1') || '0.0'}}h</span>
+          <span class="stat-label">Focused Work (7d)</span>
+        </div>
+        <div class="stat-chip bg-glass">
+          <span class="stat-num">{{summary?.tasks_completed || 0}}</span>
+          <span class="stat-label">Tasks Finished (7d)</span>
+        </div>
+      </div>
+
+      <!-- FORMS ROW -->
+      <div class="dashboard-grid mb-5">
+        <!-- Log Work Session -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-blue">⏱️</span> Log Session</h3>
+          <div class="form-group mt-3"><input type="text" placeholder="Project Name" [(ngModel)]="sProject" class="form-input"></div>
+          <div class="form-row">
+            <input type="number" placeholder="Hours" [(ngModel)]="sHours" class="form-input">
+            <select [(ngModel)]="sType" class="form-input">
+              <option value="focused">Focused</option>
+              <option value="meetings">Meetings</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-group"><input type="date" [(ngModel)]="sDate" class="form-input"></div>
+          <button (click)="submitSession()" class="btn-primary mt-2 w-100">Log Period</button>
+        </div>
+        
+        <!-- Add Task -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-purple">📌</span> Create Task</h3>
+          <div class="form-group mt-3"><input type="text" placeholder="Task Title" [(ngModel)]="tTitle" class="form-input"></div>
+          <div class="form-row">
+            <input type="text" placeholder="Project" [(ngModel)]="tProject" class="form-input">
+            <select [(ngModel)]="tPriority" class="form-input">
+              <option value="High">High Priority</option>
+              <option value="Medium">Medium Priority</option>
+              <option value="Low">Low Priority</option>
+            </select>
+          </div>
+          <div class="form-group"><input type="date" [(ngModel)]="tDueDate" class="form-input"></div>
+          <button (click)="submitTask()" class="btn-primary mt-2 w-100">Add Task</button>
+        </div>
+      </div>
+
+      <!-- TASK BOARD -->
+      <h2 class="form-heading mb-3">Task Board</h2>
+      <div class="task-board mb-5">
+        
+        <!-- To Do -->
+        <div class="board-column glass-panel">
+          <div class="board-header">To Do <span class="badge">{{getTasksByStatus('To Do').length}}</span></div>
+          <div class="board-items">
+            <div *ngFor="let t of getTasksByStatus('To Do')" class="task-card">
+              <div class="task-title">{{t.title}}</div>
+              <div class="task-meta">
+                <span class="priority-badge" [class.high]="t.priority==='High'" [class.low]="t.priority==='Low'">{{t.priority}}</span>
+                <span class="text-muted">{{t.due_date | date:'M/d'}}</span>
+              </div>
+              <div class="task-actions mt-2">
+                <button (click)="updateTaskStatus(t.id, 'In Progress')" class="btn-text">Start</button>
+                <button (click)="deleteTask(t.id)" class="btn-text text-error">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- In Progress -->
+        <div class="board-column glass-panel">
+          <div class="board-header">In Progress <span class="badge">{{getTasksByStatus('In Progress').length}}</span></div>
+          <div class="board-items">
+            <div *ngFor="let t of getTasksByStatus('In Progress')" class="task-card border-accent">
+              <div class="task-title">{{t.title}}</div>
+              <div class="task-meta">
+                <span class="priority-badge" [class.high]="t.priority==='High'" [class.low]="t.priority==='Low'">{{t.priority}}</span>
+                <span class="text-muted">{{t.due_date | date:'M/d'}}</span>
+              </div>
+              <div class="task-actions mt-2">
+                <button (click)="updateTaskStatus(t.id, 'Done')" class="btn-text">Finish</button>
+                <button (click)="updateTaskStatus(t.id, 'To Do')" class="btn-text">Wait</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Done -->
+        <div class="board-column glass-panel opacity-muted">
+          <div class="board-header">Done <span class="badge">{{getTasksByStatus('Done').length}}</span></div>
+          <div class="board-items">
+            <div *ngFor="let t of getTasksByStatus('Done')" class="task-card">
+              <div class="task-title" style="text-decoration:line-through">{{t.title}}</div>
+              <div class="task-actions mt-2">
+                <button (click)="updateTaskStatus(t.id, 'In Progress')" class="btn-text">Reopen</button>
+                <button (click)="deleteTask(t.id)" class="btn-text text-error">Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RECENT SESSIONS -->
+      <div class="card glass-panel mb-5">
+        <h2 class="form-heading">Recent Work Sessions</h2>
+        <div class="activity-list mt-3">
+          <div *ngIf="sessions.length === 0" class="text-muted text-center py-4">No sessions logged yet.</div>
+          <div *ngFor="let s of sessions" class="activity-item mt-3">
+            <div class="activity-icon-wrap glass-panel fi-blue">💼</div>
+            <div class="activity-info">
+              <strong>{{s.project}}</strong>
+              <span>{{s.hours}}h ({{s.type}})</span>
+            </div>
+            <div class="activity-time">{{s.date | date:'mediumDate'}}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

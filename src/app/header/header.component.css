@@ -1,0 +1,93 @@
+.topbar {
+  height: 80px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 15;
+  position: sticky;
+  top: 0;
+}
+
+.search-wrap {
+  position: relative;
+  width: 320px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 999px;
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+input:focus {
+  border-color: var(--input-focus);
+  background: var(--glass-hover);
+  box-shadow: 0 0 0 3px rgba(99,130,255,0.12);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-icon { font-size: 15px; transition: opacity 0.3s; }
+.toggle-icon.sun { opacity: 0.5; }
+:host-context(body.light) .toggle-icon.sun { opacity: 1; }
+:host-context(body.light) .toggle-icon.moon { opacity: 0.5; }
+.toggle-icon.moon { opacity: 1; }
+.toggle-track {
+  width: 44px; height: 24px;
+  background: var(--toggle-track);
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  position: relative;
+  transition: background 0.3s;
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--toggle-thumb); transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+:host-context(body.light) .toggle-thumb { transform: translateX(20px); }
+
+.user-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border);
+  overflow: hidden;
+  background: var(--glass-bg);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.user-avatar:hover { border-color: var(--accent); }
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; }

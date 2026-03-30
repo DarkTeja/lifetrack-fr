@@ -1,0 +1,123 @@
+<div class="toast-notification" [class.show]="showToastMsg">{{ toastMessage }}</div>
+<div class="bg-scene">
+  <div class="orb orb1" style="background: radial-gradient(circle at 30% 30%, rgba(52,211,153,0.15) 0%, transparent 60%);"></div>
+  <div class="orb orb2" style="background: radial-gradient(circle at 70% 60%, rgba(239,68,68,0.15) 0%, transparent 60%);"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="dashboard-layout">
+  <app-navbar></app-navbar>
+
+  <div class="main-wrapper">
+    <app-header></app-header>
+    
+    <div class="content-area">
+      <div class="dashboard-header flex-between mb-4">
+        <div>
+          <h1 class="hero-title">Finance Tracker</h1>
+          <p class="hero-sub mt-2">Monitor your income, expenses, and budget limits.</p>
+        </div>
+      </div>
+
+      <!-- Monthly KPI Summary -->
+      <div class="stats-row mb-5">
+        <div class="stat-chip bg-glass border-success">
+          <span class="stat-num text-success">+${{summary?.total_income || 0}}</span>
+          <span class="stat-label">Monthly Income</span>
+        </div>
+        <div class="stat-chip bg-glass border-error">
+          <span class="stat-num text-error">-${{summary?.total_expense || 0}}</span>
+          <span class="stat-label">Monthly Expenses</span>
+        </div>
+        <div class="stat-chip bg-glass">
+          <span class="stat-num">${{(summary?.total_income || 0) - (summary?.total_expense || 0)}}</span>
+          <span class="stat-label">Net Balance</span>
+        </div>
+      </div>
+
+      <!-- FORMS ROW -->
+      <div class="dashboard-grid mb-5" style="grid-template-columns: 2fr 1fr;">
+        <!-- Log Transaction -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2 mb-3"><span class="inline-icon center-icon fi-cyan">💸</span> Log Transaction</h3>
+          
+          <div class="form-row">
+            <select [(ngModel)]="tType" class="form-input flex-1">
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+            <input type="number" placeholder="Amount ($)" [(ngModel)]="tAmount" class="form-input flex-2">
+            <input type="date" [(ngModel)]="tDate" class="form-input flex-2">
+          </div>
+          
+          <div class="form-row">
+            <input type="text" placeholder="Category (e.g. Groceries)" [(ngModel)]="tCategory" class="form-input flex-1">
+            <input type="text" placeholder="Note (Optional)" [(ngModel)]="tNote" class="form-input flex-2">
+          </div>
+
+          <button (click)="submitTransaction()" class="btn-primary mt-2 w-100" [ngClass]="tType === 'income' ? 'btn-success' : ''">Save Transaction</button>
+        </div>
+        
+        <!-- Add Budget Limit -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2 mb-3"><span class="inline-icon center-icon fi-purple">🎯</span> Set Budget</h3>
+          <div class="form-group"><input type="text" placeholder="Category" [(ngModel)]="bCategory" class="form-input"></div>
+          <div class="form-group"><input type="number" placeholder="Monthly Limit ($)" [(ngModel)]="bLimit" class="form-input"></div>
+          <button (click)="submitBudget()" class="btn-primary mt-2 w-100" style="margin-top:23px;">Set Limit</button>
+        </div>
+      </div>
+
+      <!-- DATA OVERVIEW -->
+      <div class="dashboard-grid" style="grid-template-columns: 1fr 2fr;">
+        
+        <!-- Budgets Column -->
+        <div class="card glass-panel">
+          <h2 class="form-heading">Active Budgets</h2>
+          <div class="activity-list mt-3">
+            <div *ngIf="budgets.length === 0" class="text-muted text-sm pb-2">No active budgets.</div>
+            
+            <div *ngFor="let b of budgets" class="budget-item mb-4">
+              <div class="flex-between mb-1">
+                <span class="goal-subject">{{b.category}}</span>
+                <span class="goal-target">${{getBudgetSpent(b.category)}} / ${{b.monthly_limit}}</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getBudgetPercentage(b.category, b.monthly_limit)"
+                     [class.bg-error]="getBudgetPercentage(b.category, b.monthly_limit) > 90">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Transactions Column -->
+        <div class="card glass-panel">
+          <h2 class="form-heading">Recent Transactions</h2>
+          <div class="activity-list mt-3">
+            <div *ngIf="transactions.length === 0" class="text-muted text-center py-4">No transactions logged yet.</div>
+            
+            <div *ngFor="let tx of transactions" class="activity-item mt-3 pb-3">
+              <div class="activity-icon-wrap glass-panel" [class.fi-green]="tx.type === 'income'" [class.fi-red]="tx.type === 'expense'">
+                {{tx.type === 'income' ? '↓' : '↑'}}
+              </div>
+              <div class="activity-info flex-row flex-between w-100">
+                <div class="vstack">
+                  <strong>{{tx.category}}</strong>
+                  <span>{{tx.note || 'No note attached'}} • {{tx.date | date:'mediumDate'}}</span>
+                </div>
+                <div class="tx-amount" [class.text-success]="tx.type === 'income'" [class.text-error]="tx.type === 'expense'">
+                  {{tx.type === 'income' ? '+' : '-'}}${{tx.amount}}
+                </div>
+                <button (click)="deleteTransaction(tx.id)" class="btn-icon ms-3">🗑️</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

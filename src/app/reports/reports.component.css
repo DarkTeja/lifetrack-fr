@@ -1,0 +1,39 @@
+/* ── DASHBOARD STYLES ── */
+.dashboard-layout { position: relative; z-index: 10; display: flex; height: 100vh; overflow: hidden; }
+.main-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+.content-area { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; animation: fadeSlideUp 0.6s cubic-bezier(.4,0,.2,1) both; }
+@keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.mt-2 { margin-top: 8px; } .mt-3 { margin-top: 16px; } .mt-4 { margin-top: 24px; }
+.mb-4 { margin-bottom: 24px; } .mb-5 { margin-bottom: 32px; }
+
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-center { display: flex; align-items: center; }
+.flex-row { display: flex; align-items: center; gap: 32px; }
+.align-center { align-items: center; }
+.gap-2 { gap: 8px; } 
+.text-muted { color: var(--text-muted); } .text-sm { font-size: 13px; line-height: 1.6; }
+.vstack { display: flex; flex-direction: column; }
+
+.glass-panel { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.card { padding: 32px; border-radius: 24px; box-shadow: var(--card-shadow); }
+
+.reports-highlight-grid { display: grid; grid-template-columns: 1fr; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+
+/* ── CHARTS ── */
+.graph-primary { padding: 40px; }
+.radar-container { width: 350px; height: 350px; flex-shrink: 0; display: flex; justify-content: center; position: relative; }
+.score-container { flex: 1; }
+.score-label { font-size: 16px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+.score-value { font-size: 84px; font-weight: 700; color: var(--text-primary); line-height: 1; font-family: 'Space Grotesk', sans-serif;}
+.score-max { font-size: 32px; color: var(--text-muted); font-weight: 500; margin-left: 8px; }
+
+.chart-card { padding: 24px; display: flex; flex-direction: column; }
+.canvas-wrapper { position: relative; width: 100%; height: 260px; display: flex; align-items: center; justify-content: center; }
+.center-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; }
+
+@media (max-width: 800px) {
+  .flex-row { flex-direction: column; align-items: center; text-align: center; }
+  .radar-container { width: 100%; height: 300px; }
+}

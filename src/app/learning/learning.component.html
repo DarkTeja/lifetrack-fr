@@ -1,0 +1,154 @@
+<!-- Toast Notification -->
+<div class="toast-notification" [class.show]="showToastMsg">
+  {{ toastMessage }}
+</div>
+
+<!-- BG Overlay -->
+<div class="bg-scene">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="dashboard-layout">
+  <app-navbar></app-navbar>
+
+  <div class="main-wrapper">
+    <app-header></app-header>
+    
+    <div class="content-area">
+      <!-- HEADER -->
+      <div class="dashboard-header flex-between mb-5">
+        <div>
+          <h1 class="hero-title">Study Tracker</h1>
+          <p class="hero-sub mt-2">Log your academic progress and monitor test scores.</p>
+        </div>
+      </div>
+
+      <!-- FORMS ROW -->
+      <div class="metrics-grid mt-4">
+        
+        <!-- Log Session Form -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-blue">⏱️</span> Log Session</h3>
+          <div class="form-group mt-3">
+            <input type="text" placeholder="Subject (e.g. Calculus)" [(ngModel)]="sSubject" class="form-input">
+          </div>
+          <div class="form-group">
+            <input type="number" placeholder="Duration (mins)" [(ngModel)]="sDuration" class="form-input">
+          </div>
+          <div class="form-group">
+            <input type="date" [(ngModel)]="sDate" class="form-input">
+          </div>
+          <button (click)="submitSession()" class="btn-primary mt-2 w-100">Log Study</button>
+        </div>
+        
+        <!-- Log Score Form -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-green">📝</span> Log Score</h3>
+          <div class="form-group mt-3">
+            <input type="text" placeholder="Subject" [(ngModel)]="scSubject" class="form-input">
+          </div>
+          <div class="form-row">
+            <input type="number" placeholder="Score" [(ngModel)]="scScore" class="form-input">
+            <span style="color:var(--text-muted)">/</span>
+            <input type="number" placeholder="Max" [(ngModel)]="scMax" class="form-input">
+          </div>
+          <div class="form-group">
+            <input type="date" [(ngModel)]="scDate" class="form-input">
+          </div>
+          <button (click)="submitScore()" class="btn-primary mt-2 w-100">Save Score</button>
+        </div>
+
+        <!-- Set Goal Form -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-purple">🎯</span> Set Goal</h3>
+          <div class="form-group mt-3">
+            <input type="text" placeholder="Subject" [(ngModel)]="gSubject" class="form-input">
+          </div>
+          <div class="form-group">
+            <input type="number" placeholder="Target per week (hours)" [(ngModel)]="gHours" class="form-input">
+          </div>
+          <div class="form-group">
+            <input type="date" placeholder="Deadline" [(ngModel)]="gDeadline" class="form-input">
+          </div>
+          <button (click)="submitGoal()" class="btn-primary mt-2 w-100">Add Goal</button>
+        </div>
+
+      </div>
+
+      <!-- DATA DISPLAY ROW -->
+      <div class="dashboard-grid mt-5">
+        
+        <!-- Recent Sessions -->
+        <div class="card glass-panel">
+          <div class="card-header">
+            <h2 class="form-heading">Recent Sessions</h2>
+          </div>
+          <div class="activity-list mt-4">
+            <div *ngIf="sessions.length === 0" class="empty-state">
+              <div class="empty-icon">📚</div>
+              <p class="empty-title">No study sessions yet</p>
+              <p class="empty-sub">Log your first session above and start building your knowledge streak!</p>
+            </div>
+            
+            <div *ngFor="let s of sessions" class="activity-item mt-3">
+              <div class="activity-icon-wrap glass-panel">📚</div>
+              <div class="activity-info">
+                <strong>{{s.subject}}</strong>
+                <span>{{s.duration_mins}} mins logged on {{s.date | date:'mediumDate'}}</span>
+              </div>
+              <button class="btn-icon" (click)="deleteSession(s.id)">🗑️</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="vstack gap-4">
+          <!-- Goals List -->
+          <div class="card glass-panel">
+            <h2 class="form-heading">Current Goals</h2>
+            <div class="activity-list mt-3">
+              <div *ngIf="goals.length === 0" class="empty-state">
+                <div class="empty-icon">🎯</div>
+                <p class="empty-sub">Set your first study goal above to stay on track!</p>
+              </div>
+              <div *ngFor="let g of goals" class="goal-item mb-3">
+                <div class="flex-between">
+                  <span class="goal-subject">{{g.subject}}</span>
+                  <span class="goal-target">{{g.hoursLogged || 0}} / {{g.target_hours}}h</span>
+                </div>
+                <div class="progress-bar mt-1">
+                  <div class="progress-fill" [style.width]="(g.progress || 0) + '%'"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scores List -->
+          <div class="card glass-panel mt-4">
+            <h2 class="form-heading">Recent Scores</h2>
+            <div class="activity-list mt-3">
+              <div *ngIf="scores.length === 0" class="empty-state">
+                <div class="empty-icon">📝</div>
+                <p class="empty-sub">No test scores yet. Add your first score above!</p>
+              </div>
+              <div *ngFor="let sc of scores" class="activity-item mt-2">
+                <div class="activity-info">
+                  <strong>{{sc.subject}}</strong>
+                  <span>{{sc.date | date:'shortDate'}}</span>
+                </div>
+                <div class="score-badge">
+                  {{sc.score}} / {{sc.max_score}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

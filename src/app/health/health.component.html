@@ -1,0 +1,133 @@
+<div class="toast-notification" [class.show]="showToastMsg">{{ toastMessage }}</div>
+<div class="bg-scene">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="dashboard-layout">
+  <app-navbar></app-navbar>
+
+  <div class="main-wrapper">
+    <app-header></app-header>
+    
+    <div class="content-area">
+      <div class="dashboard-header flex-between mb-4">
+        <div>
+          <h1 class="hero-title">Health & Fitness</h1>
+          <p class="hero-sub mt-2">Track workouts, sleep quality, and daily hydration.</p>
+        </div>
+      </div>
+
+      <!-- Weekly KPI Summary -->
+      <div class="stats-row mb-5">
+        <div class="stat-chip bg-glass">
+          <span class="stat-num">{{summary?.total_workouts || 0}}</span>
+          <span class="stat-label">Workouts (7d)</span>
+        </div>
+        <div class="stat-chip bg-glass">
+          <span class="stat-num">{{(summary?.avg_sleep | number:'1.1-1') || '0.0'}}h</span>
+          <span class="stat-label">Avg Sleep</span>
+        </div>
+        <div class="stat-chip bg-glass">
+          <span class="stat-num">{{(summary?.avg_water | number:'1.1-1') || '0.0'}}L</span>
+          <span class="stat-label">Avg Water</span>
+        </div>
+      </div>
+
+      <!-- FORMS ROW -->
+      <div class="metrics-grid mb-5">
+        <!-- Log Workout -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-purple">🏋️</span> Log Workout</h3>
+          <div class="form-group mt-3"><input type="text" placeholder="Type (e.g. Cardio)" [(ngModel)]="wType" class="form-input"></div>
+          <div class="form-row">
+            <input type="number" placeholder="Mins" [(ngModel)]="wDuration" class="form-input">
+            <input type="number" placeholder="kCal" [(ngModel)]="wCalories" class="form-input">
+          </div>
+          <div class="form-group"><input type="date" [(ngModel)]="wDate" class="form-input"></div>
+          <button (click)="submitWorkout()" class="btn-primary mt-2 w-100">Save Workout</button>
+        </div>
+        
+        <!-- Log Sleep -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-blue">🛏️</span> Log Sleep</h3>
+          <div class="form-group mt-3"><input type="number" placeholder="Hours Slept" [(ngModel)]="sHours" class="form-input"></div>
+          <div class="form-group"><input type="number" placeholder="Quality (1-5)" min="1" max="5" [(ngModel)]="sQuality" class="form-input"></div>
+          <div class="form-group"><input type="date" [(ngModel)]="sDate" class="form-input"></div>
+          <button (click)="submitSleep()" class="btn-primary mt-2 w-100">Save Sleep</button>
+        </div>
+
+        <!-- Log Water -->
+        <div class="card glass-panel compact-card">
+          <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-cyan">💧</span> Log Water</h3>
+          <div class="form-group mt-3"><input type="number" placeholder="Amount (Litres)" [(ngModel)]="waLitres" class="form-input"></div>
+          <div class="form-group"><input type="date" [(ngModel)]="waDate" class="form-input"></div>
+          <button (click)="submitWater()" class="btn-primary mt-2 w-100" style="margin-top:54px;">Save Water</button>
+        </div>
+      </div>
+
+      <!-- DATA DISPLAY -->
+      <div class="dashboard-grid">
+        <!-- Workouts List -->
+        <div class="card glass-panel">
+          <h2 class="form-heading">Recent Workouts</h2>
+          <div class="activity-list mt-3">
+          <div *ngIf="workouts.length === 0" class="empty-state">
+            <div class="empty-icon">🏋️</div>
+            <p class="empty-title">No workouts yet</p>
+            <p class="empty-sub">Log your first run, lift, or yoga session above and ignite your fitness streak!</p>
+          </div>
+            <div *ngFor="let w of workouts" class="activity-item mt-3">
+              <div class="activity-icon-wrap glass-panel fi-purple">⚡</div>
+              <div class="activity-info">
+                <strong>{{w.type}}</strong>
+                <span>{{w.duration_mins}} mins | {{w.calories_burned}} kcal</span>
+              </div>
+              <div class="activity-time">{{w.date | date:'shortDate'}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="vstack gap-4">
+          <!-- Sleep List -->
+          <div class="card glass-panel">
+            <h2 class="form-heading">Sleep Log</h2>
+            <div class="activity-list mt-3">
+              <div *ngIf="sleepLogs.length === 0" class="empty-state">
+                <div class="empty-icon">🛌</div>
+                <p class="empty-sub">No sleep data tracked yet. Log your first night above!</p>
+              </div>
+              <div *ngFor="let sl of sleepLogs" class="activity-item mb-2">
+                <div class="activity-info">
+                  <strong>{{sl.hours_slept}} Hours</strong>
+                  <span>Quality: {{sl.quality}}/5</span>
+                </div>
+                <div class="activity-time">{{sl.date | date:'M/d'}}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Water List -->
+          <div class="card glass-panel">
+            <h2 class="form-heading">Hydration Log</h2>
+            <div class="activity-list mt-3">
+              <div *ngIf="waterLogs.length === 0" class="empty-state">
+                <div class="empty-icon">💧</div>
+                <p class="empty-sub">Stay hydrated! Log your first litre above.</p>
+              </div>
+              <div *ngFor="let wa of waterLogs" class="activity-item mb-2">
+                <div class="activity-info">
+                  <strong>{{wa.litres}} Litres</strong>
+                </div>
+                <div class="activity-time">{{wa.date | date:'M/d'}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

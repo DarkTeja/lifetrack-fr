@@ -1,0 +1,177 @@
+<!-- BG -->
+<div class="bg-scene">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="dashboard-layout">
+  <app-navbar></app-navbar>
+
+  <div class="main-wrapper">
+    <app-header></app-header>
+    
+    <div class="content-area">
+      <!-- HEADER -->
+      <div class="dashboard-header flex-between">
+        <div>
+          <h1 class="hero-title">Overview</h1>
+          <p class="hero-sub mt-2">Welcome back! Your dashboard is syncing with your active trackers.</p>
+        </div>
+        <button class="btn-primary" style="width: auto; padding: 12px 24px;" routerLink="/work">+ Log Work</button>
+      </div>
+
+      <!-- KEY METRICS ROW -->
+      <div class="metrics-grid mt-5">
+        <div class="metric-card glass-panel" routerLink="/work" style="cursor: pointer;">
+          <div class="mc-icon fi-blue">💼</div>
+          <div class="mc-info">
+            <span class="mc-label">Focus Time (7d)</span>
+            <span class="mc-value">{{(summary_work?.focused_hours | number:'1.1-1') || '0.0'}}h</span>
+          </div>
+        </div>
+        
+        <div class="metric-card glass-panel" routerLink="/health" style="cursor: pointer;">
+          <div class="mc-icon fi-green">💪</div>
+          <div class="mc-info">
+            <span class="mc-label">Workouts (7d)</span>
+            <span class="mc-value">{{summary_health?.total_workouts || 0}}</span>
+          </div>
+        </div>
+
+        <div class="metric-card glass-panel" routerLink="/work" style="cursor: pointer;">
+          <div class="mc-icon fi-purple">⚡</div>
+          <div class="mc-info">
+            <span class="mc-label">Tasks Done (7d)</span>
+            <span class="mc-value">{{summary_work?.tasks_completed || 0}}</span>
+          </div>
+        </div>
+
+        <div class="metric-card glass-panel" routerLink="/finance" style="cursor: pointer;">
+          <div class="mc-icon fi-amber">💰</div>
+          <div class="mc-info">
+            <span class="mc-label">Net Balance (30d)</span>
+            <span class="mc-value">${{(summary_finance?.total_income || 0) - (summary_finance?.total_expense || 0)}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT GRID -->
+      <div class="dashboard-grid mt-5">
+        
+        <!-- AI INSIGHTS CARD (Large) -->
+        <div class="card glass-panel insights-card hover-glow" (click)="openAiModal()" style="cursor: pointer; transition: all 0.3s;">
+          <div class="card-header">
+            <h2 class="form-heading flex-center gap-2">
+              <span class="feature-icon fi-purple inline-icon">✨</span> AI Life Insights
+            </h2>
+            <button class="btn-icon">💡</button>
+          </div>
+          
+          <div class="insight-list mt-4">
+            <div class="insight-item">
+              <div class="insight-indicator" [class.bg-purple]="aiInsightText.includes('Generating')" [class.bg-success]="!aiInsightText.includes('Generating')"></div>
+              <div class="insight-text" style="line-height: 1.6;">
+                <strong>Gemini Analysis (Click to Expand):</strong> {{aiInsightText}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY CARD -->
+        <div class="card glass-panel activity-card">
+          <div class="card-header">
+            <h2 class="form-heading">Recent Activity Feed</h2>
+          </div>
+          <div class="activity-list mt-4">
+            <div *ngIf="recentActivity.length === 0" class="text-muted text-sm pb-2">No data logged. Visit trackers to begin.</div>
+            
+            <div *ngFor="let a of recentActivity" class="activity-item mt-3">
+              <div class="activity-icon-wrap glass-panel">{{a.icon}}</div>
+              <div class="activity-info">
+                <strong>{{a.type}}</strong>
+                <span>{{a.title}}</span>
+              </div>
+              <div class="activity-time" style="font-size:12px; color:var(--text-muted);">{{a.time | date:'M/d h:mm a'}}</div>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- ================= AI MODAL OVERLAY ================= -->
+<div class="ai-modal-overlay" *ngIf="showAiModal" (click)="closeAiModal()">
+  <div class="ai-modal glass-panel" (click)="$event.stopPropagation()">
+    <div class="modal-header flex-between mb-4">
+      <h2 class="hero-title" style="font-size:26px"><span class="fi-purple inline-icon">✨</span> Deep Analysis</h2>
+      <button class="btn-icon" (click)="closeAiModal()">❌</button>
+    </div>
+    
+    <div class="modal-grid">
+      <div class="modal-chart-area glass-panel p-3">
+        <h3 class="form-heading mb-3">AI Life Balance Polar Area</h3>
+        <div class="canvas-wrapper" style="height: 300px; width: 100%;"><canvas #aiModalChart></canvas></div>
+      </div>
+      
+      <div class="modal-text-area">
+        <div class="ai-score-box mb-4 glass-panel p-3" style="text-align: center;">
+          <div class="text-muted" style="text-transform: uppercase; font-weight:700; letter-spacing:1px; font-size:12px;">Gemini Estimated Score</div>
+          <div class="hero-title mt-2" style="color:var(--accent2); font-size:42px;">
+            {{aiInsightObj?.ai_score_estimation || '--'}}
+            <span style="font-size:18px; color:var(--text-muted)">/100</span>
+          </div>
+        </div>
+        
+        <div class="ai-analysis mb-4 p-3 glass-panel" style="line-height: 1.7; font-size:16px; border-color:var(--accent2);">
+          {{aiInsightObj?.analysis || aiInsightText}}
+        </div>
+        
+        <div class="pros-cons-grid">
+          <div class="pros-box p-1">
+            <h4 class="text-success mb-2" style="font-size:14px; font-weight:700;">✅ WHAT WORKED</h4>
+            <ul style="padding-left:16px; line-height:1.5; font-size:14px; color:var(--text-primary);">
+              <li *ngFor="let p of aiInsightObj?.pros" class="mb-1">{{p}}</li>
+              <li *ngIf="!aiInsightObj?.pros?.length" class="text-muted">Data processing...</li>
+            </ul>
+          </div>
+          <div class="cons-box p-1">
+            <h4 class="text-error mb-2" style="font-size:14px; font-weight:700;">⚠️ WHAT FAILED</h4>
+            <ul style="padding-left:16px; line-height:1.5; font-size:14px; color:var(--text-primary);">
+              <li *ngFor="let c of aiInsightObj?.cons" class="mb-1">{{c}}</li>
+              <li *ngIf="!aiInsightObj?.cons?.length" class="text-muted">Data processing...</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- CHAT UI -->
+        <div class="ai-chat mt-4 glass-panel p-3" style="border-color:rgba(124, 58, 237, 0.2);">
+          <h4 class="form-heading mb-2"><span class="fi-purple">💬</span> Ask Follow-up Questions</h4>
+          <div class="chat-log mb-3" style="max-height: 220px; min-height: 80px; overflow-y: auto; display:flex; flex-direction:column; gap:10px; padding-right:8px;">
+            <div *ngIf="aiMessages.length === 0" class="text-muted" style="font-size:13px; text-align:center; padding: 20px 0;">Ask Gemini for specific advice based on the above report!</div>
+            
+            <div *ngFor="let m of aiMessages" style="font-size:14px; line-height:1.5; padding:10px 14px; border-radius:12px; background: rgba(255,255,255,0.05); max-width:90%;" [style.align-self]="m.role === 'user' ? 'flex-end' : 'flex-start'" [style.border]="m.role === 'user' ? '1px solid var(--glass-border)' : '1px solid rgba(124, 58, 237, 0.4)'">
+              <strong [style.color]="m.role === 'user' ? 'var(--text-primary)' : 'var(--accent2)'">{{m.role === 'user' ? 'You' : 'Coach Gemini'}}</strong><br>
+              <span style="color:var(--text-muted)">{{m.text}}</span>
+            </div>
+            
+            <div *ngIf="isAiTyping" style="font-size:14px; padding:10px 14px; border-radius:12px; background: rgba(255,255,255,0.05); max-width:85%; align-self:flex-start; border: 1px solid rgba(124, 58, 237, 0.4);">
+              <em style="color:var(--accent2)">Generating response...</em>
+            </div>
+          </div>
+          
+          <div class="chat-input flex-between gap-2">
+            <input type="text" [(ngModel)]="aiQuestion" placeholder="E.g., How do I get more sleep?" class="form-input text-sm" style="flex:1; border-color:var(--glass-border);" (keyup.enter)="askAi()">
+            <button class="btn-primary flex-center" style="width:auto; padding:10px 20px; font-size:14px;" (click)="askAi()" [disabled]="isAiTyping">Send</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

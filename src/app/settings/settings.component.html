@@ -1,0 +1,126 @@
+<!-- BG -->
+<div class="bg-scene">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="dashboard-layout">
+  <app-navbar></app-navbar>
+
+  <div class="main-wrapper">
+    <div class="content-area">
+      <div class="settings-header mb-5">
+        <h1 class="hero-title">Account Settings ⚙️</h1>
+        <p class="hero-sub mt-2">Manage your profile, security, and data preferences.</p>
+      </div>
+
+      <div class="settings-grid">
+
+        <!-- THEME PICKER CARD (full width) -->
+        <div class="glass-panel settings-card theme-card">
+          <h2 class="section-title">🎨 Background Theme</h2>
+          <p class="section-sub">Choose a global color palette. Your selection is saved automatically.</p>
+
+          <div class="theme-swatches mt-3">
+            <div
+              *ngFor="let t of themes"
+              class="swatch"
+              [class.active]="activeTheme === t.id"
+              [style.background]="t.swatch"
+              (click)="selectTheme(t.id)"
+              [title]="t.name">
+              <span class="swatch-emoji">{{t.emoji}}</span>
+              <span class="swatch-name">{{t.name}}</span>
+              <span class="swatch-check" *ngIf="activeTheme === t.id">✓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFILE CARD -->
+        <div class="glass-panel settings-card">
+          <h2 class="section-title">👤 Profile Information</h2>
+          <p class="section-sub">Update your name and email address. A fresh session token will be issued automatically.</p>
+
+          <div class="field">
+            <label>First Name</label>
+            <div class="input-wrap">
+              <span class="input-icon">✏️</span>
+              <input type="text" [(ngModel)]="firstName" placeholder="Enter first name">
+            </div>
+          </div>
+
+          <div class="field mt-3">
+            <label>Last Name</label>
+            <div class="input-wrap">
+              <span class="input-icon">✏️</span>
+              <input type="text" [(ngModel)]="lastName" placeholder="Enter last name">
+            </div>
+          </div>
+
+          <div class="field mt-3">
+            <label>Email Address <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(cannot be changed)</span></label>
+            <div class="input-wrap" style="opacity:0.6;">
+              <span class="input-icon">✉</span>
+              <input type="email" [(ngModel)]="email" placeholder="your@email.com" readonly style="cursor:not-allowed;">
+            </div>
+          </div>
+
+          <button class="btn-primary mt-4" style="width:100%;" (click)="saveProfile()" [disabled]="isProfileLoading">
+            {{ isProfileLoading ? 'Saving...' : 'Save Profile Changes' }}
+          </button>
+        </div>
+
+        <!-- PASSWORD CARD -->
+        <div class="glass-panel settings-card">
+          <h2 class="section-title">🔒 Change Password</h2>
+          <p class="section-sub">For security, confirm your current password before setting a new one.</p>
+
+          <div class="field mt-3">
+            <label>Current Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔑</span>
+              <input type="password" [(ngModel)]="currentPassword" placeholder="Enter current password">
+            </div>
+          </div>
+          <div class="field mt-3">
+            <label>New Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" [(ngModel)]="newPassword" placeholder="Enter new password (min 6 chars)">
+            </div>
+          </div>
+          <div class="field mt-3">
+            <label>Confirm New Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirm new password">
+            </div>
+          </div>
+
+          <button class="btn-primary mt-4" style="width:100%; background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;" (click)="changePassword()" [disabled]="isPasswordLoading">
+            {{ isPasswordLoading ? 'Updating...' : 'Update Password' }}
+          </button>
+        </div>
+
+        <!-- DATA EXPORT CARD -->
+        <div class="glass-panel settings-card export-card">
+          <div class="export-icon">📦</div>
+          <h2 class="section-title mt-3">Export Your Data</h2>
+          <p class="section-sub mt-2">Download a complete archive of all your LifeTrack data (Study, Health, Work, Finance) as a CSV spreadsheet. Your data is yours — always.</p>
+          <button class="btn-primary mt-4" style="background: linear-gradient(135deg, #0e9488, #059669) !important;" (click)="exportData()">
+            ⬇️ Download My Data (.csv)
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" [class.show]="showToastMsg">
+  <div class="toast-dot"></div>
+  <span>{{toastMessage}}</span>
+</div>
