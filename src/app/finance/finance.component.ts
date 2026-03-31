@@ -71,7 +71,15 @@ export class FinanceComponent implements OnInit {
   clearBudget() { this.bCategory = ''; this.bLimit = null; }
   
   getBudgetSpent(category: string) {
-    const expenses = this.transactions.filter(t => t.type === 'expense' && t.category === category);
+    const currentMonth = new Date().toISOString().substring(0, 7); // YYYY-MM
+    const expenses = this.transactions.filter(t => {
+      const txMonth = t.date ? new Date(t.date).toISOString().substring(0, 7) : '';
+      return (
+        t.type === 'expense' &&
+        t.category?.toLowerCase() === category?.toLowerCase() &&
+        txMonth === currentMonth
+      );
+    });
     return expenses.reduce((acc, t) => acc + Number(t.amount), 0);
   }
 
