@@ -209,23 +209,36 @@ button {
 /* AI MODAL */
 .ai-modal-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   z-index: 10000; display: flex; align-items: center; justify-content: center;
   animation: fadeIn 0.3s ease;
 }
 .ai-modal {
-  width: 90vw; max-width: 900px; max-height: 90vh; overflow-y: auto;
-  border-radius: 24px; padding: 40px; border: 1px solid var(--glass-border);
+  width: 94vw; max-width: 900px; max-height: 90vh; overflow-y: auto;
+  border-radius: 24px; padding: 32px; border: 1px solid var(--glass-border);
   box-shadow: 0 20px 80px rgba(124, 58, 237, 0.4);
-  background: linear-gradient(145deg, rgba(15, 22, 40, 0.95) 0%, rgba(15, 22, 40, 0.8) 100%);
+  background: linear-gradient(145deg, rgba(15, 22, 40, 0.98) 0%, rgba(15, 22, 40, 0.92) 100%);
+  position: relative;
 }
-.modal-grid { display: grid; grid-template-columns: 1.2fr 1.5fr; gap: 40px; }
-.pros-cons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 32px; }
+.pros-cons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .hover-glow:hover { box-shadow: 0 0 30px rgba(124, 58, 237, 0.4); transform: translateY(-3px); border-color: rgba(124, 58, 237, 0.6); }
+
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 900px) {
+  .modal-grid { grid-template-columns: 1fr; gap: 24px; }
+  .ai-modal { padding: 24px; }
+}
+
+@media (max-width: 640px) {
+  .ai-modal { width: 96vw; padding: 20px 16px; border-radius: 20px; }
+  .pros-cons-grid { grid-template-columns: 1fr; gap: 12px; }
+  .hero-title { font-size: 22px !important; }
+  .ai-modal .form-heading { font-size: 18px !important; }
+}
+
 @media (max-width: 768px) { 
-  .modal-grid { grid-template-columns: 1fr; } 
-  .pros-cons-grid { grid-template-columns: 1fr; } 
   .dashboard-layout {
     flex-direction: column !important;
     padding-top: 70px;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ThemeService, THEMES, AppTheme } from '../services/theme.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-settings',
@@ -87,7 +88,8 @@ export class SettingsComponent implements OnInit {
 
   exportData() {
     if (!this.userId) return;
-    window.open(`http://localhost:5000/api/export/${this.userId}`, '_blank');
+        // window.open(`http://localhost:5000/api/export/${this.userId}`, '_blank');
+    window.open(`${environment.apiUrl}/export/${this.userId}`, '_blank');
   }
 
   showToast(msg: string) {

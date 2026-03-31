@@ -16,6 +16,9 @@ export class WorkComponent implements OnInit {
   // Task Model
   tTitle = ''; tProject = ''; tPriority = 'High'; tDueDate = '';
 
+  maxDate = new Date().toISOString().split('T')[0];
+
+
   toastMessage = ''; showToastMsg = false;
 
   constructor(private workService: WorkService) {}
@@ -38,6 +41,9 @@ export class WorkComponent implements OnInit {
   submitSession() {
     if (!this.sProject || !this.sHours || !this.sDate) {
       this.showToast('Fill required fields'); return;
+    }
+    if (this.sDate > this.maxDate) {
+      this.showToast('Cannot log future sessions'); return;
     }
     this.workService.logSession({ project: this.sProject, hours: this.sHours, type: this.sType, date: this.sDate })
       .subscribe({ 

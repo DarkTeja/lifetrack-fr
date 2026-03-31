@@ -8,42 +8,35 @@
   background: rgba(255,255,255,0.02);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  z-index: 15;
+  z-index: 100;
   position: sticky;
   top: 0;
 }
 
-.search-wrap {
-  position: relative;
-  width: 320px;
+.header-left {
+  display: flex;
+  align-items: center;
 }
 
-.search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-input {
-  width: 100%;
-  padding: 12px 14px 12px 40px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
+.date-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--glass-bg);
+  padding: 10px 20px;
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
-  color: var(--text-primary);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s;
+  backdrop-filter: blur(8px);
 }
 
-input:focus {
-  border-color: var(--input-focus);
-  background: var(--glass-hover);
-  box-shadow: 0 0 0 3px rgba(99,130,255,0.12);
+.calendar-icon { font-size: 18px; }
+
+.current-date {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
 }
 
 .header-actions {
@@ -52,42 +45,85 @@ input:focus {
   gap: 24px;
 }
 
-/* Theme Toggle */
-.theme-toggle {
+.sync-status {
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
-  user-select: none;
+  padding: 8px 16px;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 12px;
+  cursor: default;
 }
-.toggle-icon { font-size: 15px; transition: opacity 0.3s; }
-.toggle-icon.sun { opacity: 0.5; }
-:host-context(body.light) .toggle-icon.sun { opacity: 1; }
-:host-context(body.light) .toggle-icon.moon { opacity: 0.5; }
-.toggle-icon.moon { opacity: 1; }
-.toggle-track {
-  width: 44px; height: 24px;
-  background: var(--toggle-track);
-  border-radius: 999px;
-  border: 1px solid var(--glass-border);
-  position: relative;
-  transition: background 0.3s;
-}
-.toggle-thumb {
-  position: absolute; top: 3px; left: 3px;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--toggle-thumb); transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-}
-:host-context(body.light) .toggle-thumb { transform: translateX(20px); }
 
-.user-avatar {
-  width: 40px; height: 40px;
+.sync-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
   border-radius: 50%;
-  border: 2px solid var(--glass-border);
-  overflow: hidden;
-  background: var(--glass-bg);
-  cursor: pointer;
-  transition: border-color 0.2s;
+  box-shadow: 0 0 10px var(--success);
 }
-.user-avatar:hover { border-color: var(--accent); }
-.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.pulsing {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); opacity: 1; box-shadow: 0 0 8px var(--success); }
+  50% { transform: scale(1.3); opacity: 0.6; box-shadow: 0 0 15px var(--success); }
+  100% { transform: scale(1); opacity: 1; box-shadow: 0 0 8px var(--success); }
+}
+
+.sync-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.header-btns {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-primary);
+}
+
+.icon-btn:hover {
+  background: var(--glass-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-glyph { font-size: 20px; }
+
+@media (max-width: 900px) {
+  .sync-text { display: none; }
+  .sync-status { padding: 8px; border-radius: 50%; width: 36px; height: 36px; justify-content: center; }
+  .topbar { padding: 0 20px; }
+}
+
+@media (max-width: 640px) {
+  .topbar { padding: 0 16px; height: 64px; }
+  .date-display { padding: 6px 14px; gap: 8px; }
+  .current-date { font-size: 13px; }
+  .calendar-icon { font-size: 16px; }
+  .header-actions { gap: 12px; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 10px; }
+  .btn-glyph { font-size: 16px; }
+}
+

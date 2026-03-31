@@ -46,7 +46,7 @@
               <option value="admin">Admin</option>
             </select>
           </div>
-          <div class="form-group"><input type="date" [(ngModel)]="sDate" class="form-input"></div>
+          <div class="form-group"><input type="date" [(ngModel)]="sDate" class="form-input" [max]="maxDate"></div>
           <button (click)="submitSession()" class="btn-primary mt-2 w-100">Log Period</button>
         </div>
         

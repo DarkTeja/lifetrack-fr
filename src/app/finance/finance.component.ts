@@ -16,6 +16,9 @@ export class FinanceComponent implements OnInit {
   // Budget Model
   bCategory = ''; bLimit = null;
 
+  maxDate = new Date().toISOString().split('T')[0];
+
+
   toastMessage = ''; showToastMsg = false;
 
   constructor(private financeService: FinanceService) {}
@@ -38,6 +41,9 @@ export class FinanceComponent implements OnInit {
   submitTransaction() {
     if (!this.tType || !this.tAmount || !this.tCategory || !this.tDate) {
       this.showToast('Fill required fields'); return;
+    }
+    if (this.tDate > this.maxDate) {
+      this.showToast('Cannot log future transactions'); return;
     }
     this.financeService.addTransaction({
       type: this.tType, amount: this.tAmount, category: this.tCategory, date: this.tDate, note: this.tNote

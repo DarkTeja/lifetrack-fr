@@ -68,9 +68,11 @@ export class ReportsComponent implements OnInit {
     // 4. Finance (Max 25): Net balance calculation - if expense > income, drops.
     const income = parseFloat(this.sFinance?.total_income || 0);
     const expense = parseFloat(this.sFinance?.total_expense || 0);
-    let finRatio = 1;
-    if (expense > income && income > 0) finRatio = income / expense;
-    else if (income === 0 && expense > 0) finRatio = 0;
+    let finRatio = 0;
+    if (income > 0 || expense > 0) {
+      if (income >= expense) finRatio = 1;
+      else finRatio = income / expense;
+    }
     this.scoreFinance = finRatio * 25;
 
     this.lifeScore = Math.round(this.scoreLearning + this.scoreHealth + this.scoreWork + this.scoreFinance);

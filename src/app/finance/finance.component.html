@@ -47,7 +47,7 @@
               <option value="income">Income</option>
             </select>
             <input type="number" placeholder="Amount ($)" [(ngModel)]="tAmount" class="form-input flex-2">
-            <input type="date" [(ngModel)]="tDate" class="form-input flex-2">
+            <input type="date" [(ngModel)]="tDate" class="form-input flex-2" [max]="maxDate">
           </div>
           
           <div class="form-row">

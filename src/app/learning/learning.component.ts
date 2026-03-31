@@ -18,6 +18,9 @@ export class LearningComponent implements OnInit {
   // Goal Model
   gSubject = ''; gHours = null; gDeadline = '';
 
+  maxDate = new Date().toISOString().split('T')[0];
+
+
   toastMessage = '';
   showToastMsg = false;
 
@@ -67,6 +70,10 @@ export class LearningComponent implements OnInit {
     if (!this.sSubject || !this.sDuration || !this.sDate) {
       this.showToast('Please fill required session fields'); return;
     }
+    if (this.sDate > this.maxDate) {
+      this.showToast('Cannot log future study sessions'); return;
+    }
+
     this.learningService.logSession({
       subject: this.sSubject, duration_mins: this.sDuration, date: this.sDate, notes: this.sNotes
     }).subscribe({
@@ -79,6 +86,10 @@ export class LearningComponent implements OnInit {
     if (!this.scSubject || !this.scScore || !this.scMax || !this.scDate) {
       this.showToast('Please fill required score fields'); return;
     }
+    if (this.scDate > this.maxDate) {
+      this.showToast('Cannot record future scores'); return;
+    }
+
     this.learningService.addScore({
       subject: this.scSubject, score: this.scScore, max_score: this.scMax, date: this.scDate
     }).subscribe({

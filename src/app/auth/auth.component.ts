@@ -47,15 +47,6 @@ export class AuthComponent {
     private router: Router
   ) {}
 
-  toggleTheme() {
-    const body = this.document.body;
-    if (body.classList.contains('light')) {
-      this.renderer.removeClass(body, 'light');
-    } else {
-      this.renderer.addClass(body, 'light');
-    }
-  }
-
   switchTab(tab: 'login' | 'register' | 'forgot', event?: Event) {
     if (event) {
       event.preventDefault();

@@ -39,7 +39,7 @@
             <input type="number" placeholder="Duration (mins)" [(ngModel)]="sDuration" class="form-input">
           </div>
           <div class="form-group">
-            <input type="date" [(ngModel)]="sDate" class="form-input">
+            <input type="date" [(ngModel)]="sDate" class="form-input" [max]="maxDate">
           </div>
           <button (click)="submitSession()" class="btn-primary mt-2 w-100">Log Study</button>
         </div>
@@ -56,7 +56,7 @@
             <input type="number" placeholder="Max" [(ngModel)]="scMax" class="form-input">
           </div>
           <div class="form-group">
-            <input type="date" [(ngModel)]="scDate" class="form-input">
+            <input type="date" [(ngModel)]="scDate" class="form-input" [max]="maxDate">
           </div>
           <button (click)="submitScore()" class="btn-primary mt-2 w-100">Save Score</button>
         </div>

@@ -1,19 +1,26 @@
 <header class="topbar glass-panel">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" placeholder="Search insights, tasks, or metrics..."/>
+  <div class="header-left">
+    <div class="date-display">
+      <span class="calendar-icon">📅</span>
+      <span class="current-date">{{ currentDate | date:'EEEE, MMMM d' }}</span>
+    </div>
   </div>
   
   <div class="header-actions">
-    <!-- THEME TOGGLE -->
-    <div class="theme-toggle" (click)="toggleTheme()">
-      <span class="toggle-icon moon">🌙</span>
-      <div class="toggle-track"><div class="toggle-thumb"></div></div>
-      <span class="toggle-icon sun">☀️</span>
+    <!-- AI SYNC STATUS -->
+    <div class="sync-status hover-glow">
+      <span class="sync-dot pulsing"></span>
+      <span class="sync-text">AI Core Active</span>
     </div>
-    
-    <div class="user-avatar">
-      <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" alt="User Avatar" />
+
+    <!-- ACTION BUTTONS -->
+    <div class="header-btns">
+      <button class="icon-btn" title="Notifications">
+        <span class="btn-glyph">🔔</span>
+      </button>
+      <button class="icon-btn" routerLink="/settings" title="Settings">
+        <span class="btn-glyph">⚙️</span>
+      </button>
     </div>
   </div>
 </header>

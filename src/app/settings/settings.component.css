@@ -130,6 +130,17 @@
 .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
 
 @media (max-width: 768px) {
-  .dashboard-layout { flex-direction: column; padding-top: 70px; }
+  .dashboard-layout { flex-direction: column; height: auto; overflow: visible; }
+  .main-wrapper { height: auto; overflow-y: visible; padding-top: 70px; }
+  .content-area { padding: 20px 14px; }
   .field-row { grid-template-columns: 1fr; }
+  .settings-grid { grid-template-columns: 1fr; gap: 16px; }
+  .theme-card { grid-column: auto; }
+  .settings-card { padding: 20px 14px; }
 }
+
+@media (max-width: 600px) {
+  .theme-swatches { grid-template-columns: repeat(2, 1fr); }
+  .content-area { padding: 14px 10px; }
+}
+

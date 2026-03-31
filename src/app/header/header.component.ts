@@ -7,14 +7,8 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2) {}
+  currentDate = new Date();
+  status = 'Active';
   
-  toggleTheme() {
-    const body = this.document.body;
-    if (body.classList.contains('light')) {
-      this.renderer.removeClass(body, 'light');
-    } else {
-      this.renderer.addClass(body, 'light');
-    }
-  }
+  constructor() {}
 }

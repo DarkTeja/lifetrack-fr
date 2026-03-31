@@ -46,7 +46,7 @@
             <input type="number" placeholder="Mins" [(ngModel)]="wDuration" class="form-input">
             <input type="number" placeholder="kCal" [(ngModel)]="wCalories" class="form-input">
           </div>
-          <div class="form-group"><input type="date" [(ngModel)]="wDate" class="form-input"></div>
+          <div class="form-group"><input type="date" [(ngModel)]="wDate" class="form-input" [max]="maxDate"></div>
           <button (click)="submitWorkout()" class="btn-primary mt-2 w-100">Save Workout</button>
         </div>
         
@@ -55,7 +55,7 @@
           <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-blue">🛏️</span> Log Sleep</h3>
           <div class="form-group mt-3"><input type="number" placeholder="Hours Slept" [(ngModel)]="sHours" class="form-input"></div>
           <div class="form-group"><input type="number" placeholder="Quality (1-5)" min="1" max="5" [(ngModel)]="sQuality" class="form-input"></div>
-          <div class="form-group"><input type="date" [(ngModel)]="sDate" class="form-input"></div>
+          <div class="form-group"><input type="date" [(ngModel)]="sDate" class="form-input" [max]="maxDate"></div>
           <button (click)="submitSleep()" class="btn-primary mt-2 w-100">Save Sleep</button>
         </div>
 
@@ -63,7 +63,7 @@
         <div class="card glass-panel compact-card">
           <h3 class="form-heading flex-center gap-2"><span class="inline-icon center-icon fi-cyan">💧</span> Log Water</h3>
           <div class="form-group mt-3"><input type="number" placeholder="Amount (Litres)" [(ngModel)]="waLitres" class="form-input"></div>
-          <div class="form-group"><input type="date" [(ngModel)]="waDate" class="form-input"></div>
+          <div class="form-group"><input type="date" [(ngModel)]="waDate" class="form-input" [max]="maxDate"></div>
           <button (click)="submitWater()" class="btn-primary mt-2 w-100" style="margin-top:54px;">Save Water</button>
         </div>
       </div>

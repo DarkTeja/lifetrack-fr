@@ -17,6 +17,9 @@ export class HealthComponent implements OnInit {
   sHours = null; sQuality = null; sDate = '';
   waLitres = null; waDate = '';
 
+  maxDate = new Date().toISOString().split('T')[0];
+
+
   toastMessage = '';
   showToastMsg = false;
 
@@ -40,6 +43,7 @@ export class HealthComponent implements OnInit {
 
   submitWorkout() {
     if (!this.wType || !this.wDuration || !this.wDate) return this.showToast('Please fill required fields');
+    if (this.wDate > this.maxDate) return this.showToast('Cannot log future workouts');
     this.healthService.logWorkout({ type: this.wType, duration_mins: this.wDuration, calories_burned: this.wCalories || 0, date: this.wDate })
       .subscribe({
         next: () => { this.showToast('Workout saved!'); this.fetchData(); this.clearWorkout(); },
@@ -49,6 +53,7 @@ export class HealthComponent implements OnInit {
 
   submitSleep() {
     if (!this.sHours || !this.sQuality || !this.sDate) return this.showToast('Please fill required fields');
+    if (this.sDate > this.maxDate) return this.showToast('Cannot log future sleep logs');
     this.healthService.logSleep({ hours_slept: this.sHours, quality: this.sQuality, date: this.sDate })
       .subscribe({
         next: () => { this.showToast('Sleep logged!'); this.fetchData(); this.clearSleep(); },
@@ -58,6 +63,7 @@ export class HealthComponent implements OnInit {
 
   submitWater() {
     if (!this.waLitres || !this.waDate) return this.showToast('Please fill required fields');
+    if (this.waDate > this.maxDate) return this.showToast('Cannot log future water intake');
     this.healthService.logWater({ litres: this.waLitres, date: this.waDate })
       .subscribe({
         next: () => { this.showToast('Water logged!'); this.fetchData(); this.clearWater(); },

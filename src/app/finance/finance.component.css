@@ -90,7 +90,6 @@ select.form-input { appearance: none; background-image: url('data:image/svg+xml;
 .btn-icon:hover { opacity: 1; }
 .center-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; }
 
-/* ── TOAST ── */
 .toast-notification {
   position: fixed; top: 40px; right: 40px; z-index: 9999;
   background: var(--glass-bg); border: 1px solid var(--glass-border);
@@ -100,3 +99,93 @@ select.form-input { appearance: none; background-image: url('data:image/svg+xml;
   transform: translateX(120%); transition: transform 0.4s cubic-bezier(.4,0,.2,1);
 }
 .toast-notification.show { transform: translateX(0); }
+
+/* ══════════════════════════════════════
+   📱  MOBILE RESPONSIVE — Finance
+   ══════════════════════════════════════ */
+
+/* Tablet (≤ 900px) */
+@media (max-width: 900px) {
+  .content-area { padding: 24px 20px; }
+
+  /* Force both grids to single column */
+  .dashboard-grid { grid-template-columns: 1fr !important; }
+
+  /* Stats row: vertical stack on tablet */
+  .stats-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stats-row .stat-chip { width: 100%; min-width: unset; }
+}
+
+/* Mobile (≤ 640px) */
+@media (max-width: 640px) {
+  /* Layout */
+  .dashboard-layout { flex-direction: column; height: auto; overflow: visible; }
+  .main-wrapper { height: auto; overflow-y: visible; }
+  .content-area { padding: 16px 12px; }
+
+  /* Header */
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .hero-title { font-size: 22px !important; }
+  .hero-sub { font-size: 13px !important; }
+
+  /* Stats: 1 per row, full width */
+  .stats-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stats-row .stat-chip {
+    width: 100%;
+    min-width: unset;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stat-num { font-size: 20px !important; }
+
+  /* Grids: full single column */
+  .dashboard-grid { grid-template-columns: 1fr !important; gap: 16px; }
+
+  /* Cards */
+  .card { padding: 18px 14px; border-radius: 16px; }
+  .compact-card { padding: 16px 14px; }
+
+  /* Form rows: stack vertically on mobile */
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .form-row .form-input,
+  .form-row select.form-input {
+    flex: unset;
+    width: 100%;
+  }
+  .flex-1, .flex-2 { flex: unset; width: 100%; }
+
+  /* Buttons */
+  .btn-primary { padding: 14px; font-size: 15px; }
+
+  /* Activity items: improve layout on small screen */
+  .activity-info { flex-direction: column; gap: 4px; }
+  .activity-info .flex-between { flex-direction: row; }
+  .tx-amount { font-size: 15px; }
+
+  /* Toast: move to bottom on mobile */
+  .toast-notification {
+    top: auto;
+    bottom: 20px;
+    right: 12px;
+    left: 12px;
+    transform: translateY(120px);
+    text-align: center;
+  }
+  .toast-notification.show { transform: translateY(0); }
+}
+

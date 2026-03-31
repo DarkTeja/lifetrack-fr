@@ -91,7 +91,6 @@
 .progress-fill { height: 100%; background: var(--accent); border-radius: 999px; }
 .score-badge { padding: 6px 10px; background: rgba(52,211,153,0.15); color: var(--success); font-weight: 700; border-radius: 8px; font-size: 14px; }
 
-/* ── TOAST ── */
 .toast-notification {
   position: fixed;
   top: 40px; right: 40px; z-index: 9999;
@@ -102,3 +101,27 @@
   transform: translateX(120%); transition: transform 0.4s cubic-bezier(.4,0,.2,1);
 }
 .toast-notification.show { transform: translateX(0); }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .dashboard-layout { flex-direction: column; height: auto; overflow: visible; }
+  .main-wrapper { height: auto; overflow-y: visible; padding-top: 70px; }
+  .content-area { padding: 20px 14px; }
+  .dashboard-grid { grid-template-columns: 1fr !important; gap: 16px; }
+  .metrics-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { padding: 20px 14px; border-radius: 18px; }
+  .compact-card { padding: 16px 14px; }
+}
+
+@media (max-width: 640px) {
+  .content-area { padding: 14px 10px; }
+  .form-row { flex-direction: column; gap: 8px; align-items: stretch; }
+  .form-row .form-input { flex: unset; width: 100%; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .toast-notification {
+    top: auto; bottom: 20px; right: 12px; left: 12px;
+    transform: translateY(120px); text-align: center;
+  }
+  .toast-notification.show { transform: translateY(0); }
+}
+
