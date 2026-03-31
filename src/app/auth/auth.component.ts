@@ -1,6 +1,9 @@
 import { Component, Inject, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
+import { NgZone } from '@angular/core';
+import { environment } from '../../environments/environment';
+
 
 import { AuthService } from '../services/auth.service';
 
@@ -44,8 +47,48 @@ export class AuthComponent {
     @Inject(DOCUMENT) private document: Document, 
     private renderer: Renderer2,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private ngZone: NgZone
   ) {}
+
+  ngOnInit() {
+    // @ts-ignore
+    google.accounts.id.initialize({
+      client_id: environment.googleClientId,
+      callback: this.handleGoogleResponse.bind(this)
+    });
+    // @ts-ignore
+    google.accounts.id.renderButton(
+      document.getElementById("google-btn"),
+      { theme: "outline", size: "large", width: "100%", shape: "pill" }
+    );
+  }
+
+  handleGoogleResponse(response: any) {
+    this.showToast('Authenticating with Google...');
+    this.authService.googleLogin(response.credential).subscribe({
+      next: (res: any) => {
+        if (res.token) {
+          localStorage.setItem('token', res.token);
+          this.ngZone.run(() => {
+            this.showToast('Login successful!');
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 1000);
+          });
+        }
+      },
+      error: (err) => {
+        this.ngZone.run(() => {
+          const errMsg = err.error?.error || 'Google authentication failed';
+          this.showToast(errMsg);
+          console.error("Google OAuth Error:", err);
+        });
+      }
+    });
+  }
+
+
 
   switchTab(tab: 'login' | 'register' | 'forgot', event?: Event) {
     if (event) {

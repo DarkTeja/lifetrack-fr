@@ -57,7 +57,8 @@ export class FinanceComponent implements OnInit {
     if (!this.bCategory || !this.bLimit) {
       this.showToast('Fill required fields'); return;
     }
-    const currentMonth = new Date().toISOString().substring(0, 7); // Generates YYYY-MM format
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
     this.financeService.setBudget({
       category: this.bCategory, monthly_limit: this.bLimit, month: currentMonth
     }).subscribe({
@@ -77,17 +78,27 @@ export class FinanceComponent implements OnInit {
   clearBudget() { this.bCategory = ''; this.bLimit = null; }
   
   getBudgetSpent(category: string) {
-    const currentMonth = new Date().toISOString().substring(0, 7); // YYYY-MM
+    // Robust month matching: Get YYYY-MM from current local date
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+    
+    if (!this.transactions || !category) return 0;
+
     const expenses = this.transactions.filter(t => {
-      const txMonth = t.date ? new Date(t.date).toISOString().substring(0, 7) : '';
-      return (
-        t.type === 'expense' &&
-        t.category?.toLowerCase() === category?.toLowerCase() &&
-        txMonth === currentMonth
-      );
+      // Parse transaction date safely: handle ISO strings or YYYY-MM-DD
+      const d = new Date(t.date);
+      const txMonth = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+      
+      const categoryMatch = t.category?.trim().toLowerCase() === category.trim().toLowerCase();
+      const typeMatch = t.type === 'expense';
+      const monthMatch = txMonth === currentMonth;
+
+      return typeMatch && categoryMatch && monthMatch;
     });
-    return expenses.reduce((acc, t) => acc + Number(t.amount), 0);
+
+    return expenses.reduce((acc, t) => acc + Number(t.amount || 0), 0);
   }
+
 
   getBudgetPercentage(category: string, limit: number) {
     const spent = this.getBudgetSpent(category);

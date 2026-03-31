@@ -15,6 +15,11 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, data, { responseType: 'text' });
   }
 
+  googleLogin(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/google`, { token });
+  }
+
+
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data, { responseType: 'text' });
   }

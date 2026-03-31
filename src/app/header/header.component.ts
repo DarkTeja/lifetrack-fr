@@ -9,6 +9,11 @@ import { DOCUMENT } from '@angular/common';
 export class HeaderComponent {
   currentDate = new Date();
   status = 'Active';
+  showHelpModal = false;
   
   constructor() {}
+
+  toggleHelp() {
+    this.showHelpModal = !this.showHelpModal;
+  }
 }

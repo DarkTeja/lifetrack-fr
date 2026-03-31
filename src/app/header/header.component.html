@@ -15,6 +15,9 @@
 
     <!-- ACTION BUTTONS -->
     <div class="header-btns">
+      <button class="icon-btn" (click)="toggleHelp()" title="Help & Features">
+        <span class="btn-glyph">❓</span>
+      </button>
       <button class="icon-btn" title="Notifications">
         <span class="btn-glyph">🔔</span>
       </button>
@@ -24,3 +27,53 @@
     </div>
   </div>
 </header>
+
+<!-- FEATURE SHOWCASE MODAL -->
+<div class="help-overlay" *ngIf="showHelpModal" (click)="toggleHelp()">
+  <div class="help-modal glass-panel" (click)="$event.stopPropagation()">
+    <button class="btn-close-modal" (click)="toggleHelp()">×</button>
+    
+    <div class="modal-header">
+      <h2 class="modal-title">LifeTrack AI Features</h2>
+      <p class="modal-sub">Explore the specialized modules designed for your growth.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-item">
+        <span class="feature-icon">💰</span>
+        <strong class="feature-name">Finance Hub</strong>
+        <p class="feature-desc">Track income/expenses, set smart budgets, and monitor your monthly net capital retention.</p>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">💪</span>
+        <strong class="feature-name">Health Core</strong>
+        <p class="feature-desc">Log your workouts, sleep quality, and daily hydration. Watch your health stats climb over time.</p>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">💼</span>
+        <strong class="feature-name">Work Center</strong>
+        <p class="feature-desc">Manage professional tasks and log focused work sessions to boost your productivity yield.</p>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">📚</span>
+        <strong class="feature-name">Study Labs</strong>
+        <p class="feature-desc">Set learning goals, track study hours, and log test scores to master your chosen subjects.</p>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">🧠</span>
+        <strong class="feature-name">AI Core Insight</strong>
+        <p class="feature-desc">Advanced algorithms calculate your holistic life score and provide deep predictive analytics.</p>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">📱</span>
+        <strong class="feature-name">Seamless Sync</strong>
+        <p class="feature-desc">Real-time backup ensures your data is safe and accessible across all your devices.</p>
+      </div>
+    </div>
+  </div>
+</div>
